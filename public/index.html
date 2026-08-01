@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catastro de Arbolado | Geopolis</title>
+    <link rel="icon" type="image/svg+xml" href="https://www.geopolis.cl/assests/logo-geopolis.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand">
+        <a href="https://www.geopolis.cl/" class="nav-logo">Geo<span>polis</span></a>
+        <span class="nav-sep">/</span>
+        <span class="nav-app">Catastro de Arbolado</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html" class="active">Mapa</a>
+        <a href="https://www.geopolis.cl/catastro-arbolado.html">Sobre el servicio</a>
+    </div>
+    <div class="nav-status">
+        <a href="captura.html" class="btn-ghost btn-sm" data-auth="in"><i class="fas fa-camera"></i> Capturar</a>
+        <a href="login.html" class="btn-ghost btn-sm" data-auth="out"><i class="fas fa-right-to-bracket"></i> Acceso equipo</a>
+        <button class="btn-ghost btn-sm" data-auth="in" onclick="cerrarSesion()" title="Cerrar sesión"><i class="fas fa-right-from-bracket"></i></button>
+    </div>
+</nav>
+
+<main>
+    <div class="page-hdr">
+        <span class="eyebrow">Catastro de Arbolado · Panel público</span>
+        <h1>Árboles catastrados</h1>
+        <p class="sub">Mapa y listado del arbolado urbano levantado hasta ahora. Haz clic en un árbol para ver su ficha completa.</p>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="filters">
+        <input type="text" id="fBusqueda" placeholder="Buscar por dirección o sector...">
+        <select id="fOrigen"><option value="">Origen: todos</option></select>
+        <select id="fEstado"><option value="">Estado: todos</option></select>
+        <button class="btn-ghost btn-sm" id="btnExportar"><i class="fas fa-file-export"></i> Exportar CSV</button>
+    </div>
+
+    <div class="dash-grid">
+        <div id="map"></div>
+        <div>
+            <div id="treeList" class="tree-list"></div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <a href="https://www.geopolis.cl/">Geopolis Consultores</a> · Catastro de Arbolado Urbano
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/dashboard.js"></script>
+</body>
+</html>

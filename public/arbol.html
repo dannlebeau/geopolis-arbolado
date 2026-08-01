@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha del árbol | Catastro de Arbolado</title>
+    <link rel="icon" type="image/svg+xml" href="https://www.geopolis.cl/assests/logo-geopolis.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand">
+        <a href="https://www.geopolis.cl/" class="nav-logo">Geo<span>polis</span></a>
+        <span class="nav-sep">/</span>
+        <span class="nav-app">Catastro de Arbolado</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">← Volver al mapa</a>
+    </div>
+    <div class="nav-status">
+        <button class="btn-danger btn-sm" id="btnEliminar" data-auth="in" style="display:none"><i class="fas fa-trash"></i> Eliminar</button>
+    </div>
+</nav>
+
+<main>
+    <div id="contenido"></div>
+</main>
+
+<script src="assets/js/common.js"></script>
+<script>
+const id = new URLSearchParams(window.location.search).get('id');
+let arbolActual = null;
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+}
+
+function attr(label, valor) {
+    return `<div class="attr"><div class="k">${label}</div><div class="v">${valor ? escapeHtml(valor) : '<span style="color:var(--muted)">Sin registrar</span>'}</div></div>`;
+}
+
+async function cargar() {
+    const cont = document.getElementById('contenido');
+    if (!id) {
+        cont.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i>No se indicó qué árbol mostrar.</div>`;
+        return;
+    }
+    const r = await fetch(`/api/arboles/${id}`);
+    if (!r.ok) {
+        cont.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i>No se encontró este árbol.</div>`;
+        return;
+    }
+    const a = await r.json();
+    arbolActual = a;
+
+    cont.innerHTML = `
+        <div class="page-hdr">
+            <span class="eyebrow">Ficha del árbol · ID ${a.id}</span>
+            <h1>${escapeHtml(a.especie_comun)}</h1>
+            <p class="sub" style="font-style:italic">${escapeHtml(a.especie_cientifica || '')}</p>
+        </div>
+        <div class="ficha-grid">
+            <div>
+                ${a.foto_path
+                    ? `<img src="${a.foto_path}" class="ficha-foto" alt="Foto de ${escapeHtml(a.especie_comun)}">`
+                    : `<div class="ficha-foto-empty"><i class="fas fa-camera" style="font-size:1.6rem"></i><span>Sin fotografía</span></div>`
+                }
+                <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap">
+                    <span class="badge ${a.estado_fitosanitario === 'No sano' ? 'no-sano' : 'sano'}"><span class="badge-dot"></span>${a.estado_fitosanitario || 'Sin evaluar'}</span>
+                    <span class="badge ${a.ia_estado === 'procesado' ? 'ia-procesado' : 'ia-pendiente'}"><span class="badge-dot"></span>Análisis IA: ${a.ia_estado}</span>
+                </div>
+            </div>
+            <div>
+                <h2>Ubicación</h2>
+                <div class="ficha-attrs">
+                    ${attr('Sector', a.sector)}
+                    ${attr('Unidad vecinal', a.unidad_vecinal)}
+                    ${attr('Dirección', a.direccion)}
+                    ${attr('Tipo de superficie', a.tipo_superficie)}
+                </div>
+                <h2 style="margin-top:2rem">Identificación</h2>
+                <div class="ficha-attrs">
+                    ${attr('Familia', a.familia)}
+                    ${attr('Origen', a.origen)}
+                    ${attr('Tipo de hoja', a.tipo_hoja)}
+                    ${attr('Fase de desarrollo', a.fase_desarrollo)}
+                </div>
+                <h2 style="margin-top:2rem">Caracterización</h2>
+                <div class="ficha-attrs">
+                    ${attr('Altura', a.altura ? a.altura + ' m' : null)}
+                    ${attr('DAP', a.dap ? a.dap + ' cm' : null)}
+                </div>
+                <h2 style="margin-top:2rem">Diagnóstico</h2>
+                <div class="ficha-attrs">
+                    ${attr('Defectos estructurales', a.defectos_estructurales)}
+                    ${attr('Conflicto urbano', a.conflicto_urbano)}
+                    ${attr('Manejo recomendado', a.manejo_recomendado)}
+                </div>
+            </div>
+        </div>
+    `;
+
+    const autenticado = await verificarSesion();
+    if (autenticado) {
+        document.getElementById('btnEliminar').style.display = '';
+    }
+}
+
+document.getElementById('btnEliminar').addEventListener('click', async () => {
+    if (!arbolActual) return;
+    if (!confirm(`¿Eliminar el registro de "${arbolActual.especie_comun}"? Esta acción no se puede deshacer.`)) return;
+    const r = await fetch(`/api/arboles/${arbolActual.id}`, { method: 'DELETE' });
+    if (r.ok) {
+        window.location.href = 'index.html';
+    } else {
+        mostrarToast('No se pudo eliminar', 'error');
+    }
+});
+
+cargar();
+</script>
+</body>
+</html>

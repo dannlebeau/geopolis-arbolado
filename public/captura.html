@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capturar árbol | Catastro de Arbolado</title>
+    <link rel="icon" type="image/svg+xml" href="https://www.geopolis.cl/assests/logo-geopolis.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand">
+        <a href="https://www.geopolis.cl/" class="nav-logo">Geo<span>polis</span></a>
+        <span class="nav-sep">/</span>
+        <span class="nav-app">Catastro de Arbolado</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">Mapa</a>
+        <a href="captura.html" class="active">Capturar</a>
+    </div>
+    <div class="nav-status">
+        <button class="btn-ghost btn-sm" onclick="cerrarSesion()"><i class="fas fa-right-from-bracket"></i> Cerrar sesión</button>
+    </div>
+</nav>
+
+<main style="max-width:820px">
+    <div class="page-hdr">
+        <span class="eyebrow">Terreno · Equipo</span>
+        <h1>Registrar un árbol</h1>
+        <p class="sub">Completa la ficha en terreno. La foto queda guardada para análisis automático más adelante — hoy los datos se registran a mano, igual que un catastro tradicional.</p>
+    </div>
+
+    <form id="capturaForm" class="card" enctype="multipart/form-data">
+
+        <fieldset>
+            <legend>Foto y censador</legend>
+            <div class="form-grid">
+                <div class="form-g">
+                    <label for="foto">Fotografía del árbol</label>
+                    <input type="file" id="foto" name="foto" accept="image/jpeg,image/png,image/webp">
+                    <p class="form-hint"><i class="fas fa-circle-info"></i> Análisis IA: pendiente. Se procesará cuando el módulo de visión computacional esté conectado.</p>
+                </div>
+                <div class="form-g">
+                    <label for="censador">Censador / equipo en terreno</label>
+                    <input type="text" id="censador" name="censador" placeholder="Nombre de quien registra">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Ubicación</legend>
+            <div class="form-grid">
+                <div class="form-g"><label for="sector">Sector</label><input type="text" id="sector" name="sector"></div>
+                <div class="form-g"><label for="unidad_vecinal">Unidad vecinal / barrio</label><input type="text" id="unidad_vecinal" name="unidad_vecinal"></div>
+                <div class="form-g span2"><label for="direccion">Dirección referencial</label><input type="text" id="direccion" name="direccion" placeholder="Calle y número más cercano"></div>
+                <div class="form-g"><label for="lat">Latitud</label><input type="number" step="any" id="lat" name="lat" required></div>
+                <div class="form-g"><label for="lng">Longitud</label><input type="number" step="any" id="lng" name="lng" required></div>
+                <div class="form-g span2">
+                    <button type="button" class="btn-ghost btn-sm" id="btnUbicacion"><i class="fas fa-location-crosshairs"></i> Usar mi ubicación actual</button>
+                </div>
+                <div class="form-g span2"><label for="tipo_superficie">Tipo de superficie</label><input type="text" id="tipo_superficie" name="tipo_superficie" placeholder="Césped, ripio, suelo desnudo..."></div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Identificación</legend>
+            <div class="form-grid">
+                <div class="form-g"><label for="especie_comun">Nombre común *</label><input type="text" id="especie_comun" name="especie_comun" required></div>
+                <div class="form-g"><label for="especie_cientifica">Nombre científico</label><input type="text" id="especie_cientifica" name="especie_cientifica"></div>
+                <div class="form-g"><label for="familia">Familia botánica</label><input type="text" id="familia" name="familia"></div>
+                <div class="form-g"><label for="origen">Origen</label><select id="origen" name="origen"><option value="">Selecciona...</option></select></div>
+                <div class="form-g"><label for="tipo_hoja">Tipo de hoja</label><select id="tipo_hoja" name="tipo_hoja"><option value="">Selecciona...</option></select></div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Caracterización</legend>
+            <div class="form-grid">
+                <div class="form-g"><label for="fase_desarrollo">Fase de desarrollo</label><select id="fase_desarrollo" name="fase_desarrollo"><option value="">Selecciona...</option></select></div>
+                <div class="form-g"><label for="altura">Altura (m)</label><input type="number" step="0.1" min="0" max="100" id="altura" name="altura"></div>
+                <div class="form-g"><label for="dap">DAP (cm)</label><input type="number" step="0.1" min="0" max="500" id="dap" name="dap"></div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Diagnóstico</legend>
+            <div class="form-grid">
+                <div class="form-g"><label for="estado_fitosanitario">Estado fitosanitario</label><select id="estado_fitosanitario" name="estado_fitosanitario"><option value="">Selecciona...</option></select></div>
+                <div class="form-g span2"><label for="defectos_estructurales">Defectos estructurales</label><textarea id="defectos_estructurales" name="defectos_estructurales"></textarea></div>
+                <div class="form-g span2"><label for="conflicto_urbano">Conflicto urbano</label><textarea id="conflicto_urbano" name="conflicto_urbano" placeholder="Cableado, veredas, señalética, alumbrado..."></textarea></div>
+                <div class="form-g span2"><label for="manejo_recomendado">Manejo recomendado</label><textarea id="manejo_recomendado" name="manejo_recomendado" placeholder="Poda, extracción, tratamiento fitosanitario..."></textarea></div>
+            </div>
+        </fieldset>
+
+        <button type="submit" class="btn-fill" id="btnGuardar" style="width:100%;justify-content:center">
+            <i class="fas fa-floppy-disk"></i> Guardar árbol
+        </button>
+    </form>
+</main>
+
+<script src="assets/js/common.js"></script>
+<script>
+(async () => {
+    const autenticado = await verificarSesion();
+    if (!autenticado) {
+        window.location.href = 'login.html';
+    }
+})();
+
+async function poblarEnums() {
+    const enums = await (await fetch('/api/enums')).json();
+    for (const campo of ['origen', 'tipo_hoja', 'fase_desarrollo', 'estado_fitosanitario']) {
+        const select = document.getElementById(campo);
+        enums[campo].forEach((v) => {
+            const opt = document.createElement('option');
+            opt.value = v; opt.textContent = v;
+            select.appendChild(opt);
+        });
+    }
+}
+poblarEnums();
+
+document.getElementById('btnUbicacion').addEventListener('click', () => {
+    if (!navigator.geolocation) {
+        mostrarToast('Este navegador no soporta geolocalización', 'error');
+        return;
+    }
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            document.getElementById('lat').value = pos.coords.latitude.toFixed(6);
+            document.getElementById('lng').value = pos.coords.longitude.toFixed(6);
+            mostrarToast('Ubicación capturada', 'ok');
+        },
+        () => mostrarToast('No se pudo obtener la ubicación', 'error')
+    );
+});
+
+document.getElementById('capturaForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnGuardar');
+    btn.disabled = true;
+
+    const formData = new FormData(e.target);
+    try {
+        const r = await fetch('/api/arboles', { method: 'POST', body: formData });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'No se pudo guardar');
+        mostrarToast('Árbol guardado correctamente', 'ok');
+        e.target.reset();
+    } catch (err) {
+        mostrarToast(err.message, 'error');
+    } finally {
+        btn.disabled = false;
+    }
+});
+</script>
+</body>
+</html>

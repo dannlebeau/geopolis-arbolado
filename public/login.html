@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso equipo | Catastro de Arbolado</title>
+    <link rel="icon" type="image/svg+xml" href="https://www.geopolis.cl/assests/logo-geopolis.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand">
+        <a href="https://www.geopolis.cl/" class="nav-logo">Geo<span>polis</span></a>
+        <span class="nav-sep">/</span>
+        <span class="nav-app">Catastro de Arbolado</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">Mapa</a>
+    </div>
+    <div></div>
+</nav>
+
+<main>
+    <div class="auth-wrap">
+        <span class="eyebrow" style="display:block;width:fit-content;margin:0 auto 1rem">Acceso de equipo</span>
+        <h1>Ingresa tu token</h1>
+        <p class="sub">Este acceso es solo para el equipo de terreno y administración del catastro.</p>
+
+        <form id="loginForm" class="card">
+            <div class="form-g" style="margin-bottom:1.2rem">
+                <label for="token">Token de equipo</label>
+                <input type="password" id="token" name="token" placeholder="••••••••••••" required autofocus>
+            </div>
+            <button type="submit" class="btn-fill" style="width:100%;justify-content:center">
+                <i class="fas fa-right-to-bracket"></i> Ingresar
+            </button>
+            <p id="loginError" style="color:var(--red);font-size:.82rem;margin-top:.9rem;text-align:center;display:none"></p>
+        </form>
+    </div>
+</main>
+
+<script src="assets/js/common.js"></script>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = document.getElementById('token').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.style.display = 'none';
+
+    const r = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+    });
+
+    if (r.ok) {
+        window.location.href = 'captura.html';
+    } else {
+        const data = await r.json().catch(() => ({}));
+        errorEl.textContent = data.error || 'No se pudo iniciar sesión';
+        errorEl.style.display = 'block';
+    }
+});
+</script>
+</body>
+</html>
