@@ -99,6 +99,8 @@ tr:last-child td{border-bottom:none}
 .auth-wrap{max-width:400px;margin:5rem auto}
 .auth-wrap h1{text-align:center}
 .auth-wrap .sub{margin:0 auto 2rem;text-align:center}
+.demo-hint{background:var(--green-dim);border:1px solid rgba(0,245,147,.3);border-radius:var(--r);padding:.85rem 1.1rem;font-size:.82rem;color:var(--text);margin-bottom:1.4rem;text-align:center}
+.demo-hint strong{color:var(--green);font-family:'JetBrains Mono',monospace}
 
 /* ── Ficha pública ── */
 .ficha-grid{display:grid;grid-template-columns:340px 1fr;gap:2rem}
