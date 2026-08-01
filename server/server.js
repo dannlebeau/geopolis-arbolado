@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const express = require('express');
@@ -11,6 +12,7 @@ const auth = require('./auth');
 const PORT = process.env.PORT || 4100;
 const UPLOADS_DIR = path.join(__dirname, '..', 'uploads');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const EXT_POR_MIME = {
   'image/jpeg': '.jpg',

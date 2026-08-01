@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: geopolis-arbolado
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/enums
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TEAM_TOKEN
+        sync: false
