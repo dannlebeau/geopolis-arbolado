@@ -2,6 +2,8 @@
 
 Plataforma de captura y gestión para el servicio de Catastro de Arbolado Urbano de Geopolis Consultores.
 
+**Demo en vivo:** [arbolado.geopolis.cl](https://arbolado.geopolis.cl/) (token de equipo: `Prueba01`)
+
 ## Qué es
 
 - **Mapa público** (`index.html`): catastro visible por cualquiera, sin login. Mapa Leaflet + lista filtrable + exportación CSV.
@@ -33,8 +35,9 @@ Express + `node:sqlite` (sin dependencias nativas) + `multer` para las fotos. Fr
 2. **New +** → **Blueprint** → selecciona el repo `dannlebeau/geopolis-arbolado`. Render detecta `render.yaml` automáticamente y propone el servicio `geopolis-arbolado`.
 3. Antes de confirmar, define la variable de entorno `TEAM_TOKEN` (no tiene valor por defecto, queda como secreto tuyo — no se sube al repo).
 4. Deploy. La primera vez tarda unos minutos; Render te da una URL del tipo `https://geopolis-arbolado.onrender.com` (o con un sufijo si ese nombre ya está tomado).
-5. Pásame esa URL final y actualizo el botón "Ver demo" en `catastro-arbolado.html` (geopolis.cl) para que apunte ahí.
+
+**Dominio propio:** el servicio está conectado a `arbolado.geopolis.cl` vía un CNAME en Cloudflare (el DNS de `geopolis.cl` vive ahí, no en NIC Chile, aunque el dominio esté registrado ahí) apuntando a `geopolis-arbolado.onrender.com`, con el registro en modo "DNS only" (nube gris, sin proxy) para que Render pueda verificar el dominio y emitir el certificado TLS.
 
 **Limitaciones del tier gratis** (aceptables para una demo, no para datos reales):
 - El servicio "duerme" tras ~15 min sin tráfico; la primera visita después de eso tarda 30-50s en responder.
-- El disco no es persistente: cada redeploy borra la base de datos y las fotos subidas. Para producción real, hay que sumar un disco persistente de pago o migrar a Postgres.
+- El disco no es persistente: cada redeploy (o reinicio) borra la base de datos y las fotos subidas. Para producción real, hay que sumar un disco persistente de pago o migrar a Postgres.
